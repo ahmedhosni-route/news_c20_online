@@ -1,8 +1,10 @@
 import 'package:hive/hive.dart';
+import 'package:injectable/injectable.dart';
 import 'package:path_provider/path_provider.dart';
 
+@Singleton()
 class HiveService {
-  static Future<BoxCollection> getRef() async {
+   Future<BoxCollection> getRef() async {
     var dir = await getApplicationCacheDirectory();
     final collection = await BoxCollection.open(
       'NewsApp', // Name of your database

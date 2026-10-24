@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:news_c20_online/modules/splash/screens/splash_screen.dart';
 
+import 'core/di/di.dart';
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   runApp(const MyApp());
 }
 

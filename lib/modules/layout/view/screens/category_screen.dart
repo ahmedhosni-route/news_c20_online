@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_c20_online/modules/layout/view/cubit/cubit.dart';
+import 'package:news_c20_online/modules/layout/view/cubit/states.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/categorise/app_categories.dart';
@@ -11,8 +14,9 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LayoutProvider>(
-      builder: (context, provider, child) {
+    return BlocBuilder<LayoutCubit , LayoutState>(
+      builder: (context, state) {
+        var cubit = BlocProvider.of<LayoutCubit>(context);
         return Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -29,7 +33,7 @@ class CategoryScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
-                        provider.onChanceCategory(
+                        cubit.onChanceCategory(
                           AppCategory.categories[index],
                         );
                       },

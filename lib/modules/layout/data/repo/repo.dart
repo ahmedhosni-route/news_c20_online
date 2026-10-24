@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:news_c20_online/modules/layout/data/data_source/local_data_source.dart';
 import 'package:news_c20_online/modules/layout/data/data_source/remote_data_source.dart';
@@ -11,9 +12,14 @@ abstract class Repo {
   Future<List<Sources>> getSources(String categoryId);
 }
 
+
+@Injectable(as:  Repo)
+
 class RepoImp implements Repo {
-  RemoteDataSource remoteDataSource = RemoteDataSourceImp();
-  LocalDataSource localDataSource = LocalDataSourceImp();
+  RemoteDataSource remoteDataSource ;
+  LocalDataSource localDataSource ;
+
+  RepoImp(this.localDataSource , this.remoteDataSource);
 
   @override
   Future<List<Articles>> getNews(String sourceId) async {

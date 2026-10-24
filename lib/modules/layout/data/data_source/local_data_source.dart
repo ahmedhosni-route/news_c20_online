@@ -1,3 +1,4 @@
+import 'package:injectable/injectable.dart';
 import 'package:news_c20_online/core/services/hive_service.dart';
 
 abstract class LocalDataSource {
@@ -6,10 +7,16 @@ abstract class LocalDataSource {
   Future<dynamic> getNews();
 }
 
+
+
+@Injectable(as: LocalDataSource)
 class LocalDataSourceImp extends LocalDataSource {
+  HiveService hiveService;
+  LocalDataSourceImp(this.hiveService);
+
   @override
   Future<dynamic> getNews() async {
-    var ref = await HiveService.getRef();
+    var ref = await hiveService.getRef();
     var box = await ref.openBox("news");
     var data = await box.get("articles");
     ref.close();
@@ -18,7 +25,7 @@ class LocalDataSourceImp extends LocalDataSource {
 
   @override
   Future<void> saveNews(data) async {
-    var ref = await HiveService.getRef();
+    var ref = await hiveService.getRef();
     var box = await ref.openBox("news");
     await box.put("articles", data);
     ref.close();

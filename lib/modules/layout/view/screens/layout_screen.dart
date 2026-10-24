@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:news_c20_online/core/categorise/app_categories.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_c20_online/core/theme/app_colors.dart';
-import 'package:provider/provider.dart';
-
-import '../manager/layout_provider.dart';
+import 'package:news_c20_online/modules/layout/view/cubit/cubit.dart';
+import '../../../../core/di/di.dart';
+import '../cubit/states.dart';
 import 'articles_screen.dart';
 import 'category_screen.dart';
 
@@ -12,17 +12,23 @@ class LayoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => LayoutProvider(),
-      child: Consumer<LayoutProvider>(
-        builder: (context, provider, child) {
+    return BlocProvider(
+      create: (context) => getIt<LayoutCubit>(),
+      child: BlocConsumer<LayoutCubit, LayoutState>(
+        listener: (context, state) {
+          if (state is GoToHomeState) {
+            Navigator.pop(context);
+          }
+        },
+        builder: (context, state) {
+          var cubit = BlocProvider.of<LayoutCubit>(context);
           return Scaffold(
             backgroundColor: AppColors.black,
             appBar: AppBar(
               backgroundColor: AppColors.black,
               foregroundColor: AppColors.white,
               centerTitle: true,
-              title: Text(provider.selectedCategory?.name ?? "Home"),
+              title: Text(cubit.selectedCategory?.name ?? "Home"),
               actions: [Icon(Icons.search)],
             ),
             drawer: Drawer(
@@ -43,8 +49,7 @@ class LayoutScreen extends StatelessWidget {
                   ),
                   InkWell(
                     onTap: () {
-                      provider.goToHome();
-                      Navigator.pop(context);
+                      cubit.goToHome();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -68,7 +73,7 @@ class LayoutScreen extends StatelessWidget {
               ),
             ),
 
-            body: provider.selectedCategory != null
+            body: cubit.selectedCategory != null
                 ? ArticlesScreen()
                 : CategoryScreen(),
           );
