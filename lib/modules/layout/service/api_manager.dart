@@ -1,41 +1,24 @@
-// import 'package:news_c20_online/core/services/api_service.dart';
-// import 'package:news_c20_online/modules/layout/data/mdoels/news_response.dart';
-// import 'package:news_c20_online/modules/layout/data/mdoels/sources_response.dart';
-//
-// class ApiManager {
-//
-//   static Future<List<Articles>> getNews(String sourceId)async{
-//     try{
-//       var response = await ApiService.dio.get("everything?sources=$sourceId");
-//       if(response.statusCode == 200){
-//         var data = NewsResponse.fromJson(response.data);
-//         return data.articles ?? [];
-//       }else{
-//         throw response.data["message"];
-//       }
-//     }catch(e){
-//       rethrow;
-//     }
-//
-//
-//   }
-//
-//
-//   static Future<List<Sources>> getSources(String categoryId)async{
-//     try{
-//       var response = await ApiService.dio.get("top-headlines/sources",queryParameters: {
-//         "category":categoryId
-//       });
-//       if(response.statusCode == 200){
-//         var data = SourcesResponse.fromJson(response.data);
-//         return data.sources ?? [];
-//       }else{
-//         throw response.data["message"];
-//       }
-//     }catch(e){
-//       rethrow;
-//     }
-//   }
-//
-//
-// }
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../data/models/news_response.dart';
+
+class ApiManager {
+  static const String _baseUrl = 'newsapi.org';
+  static const String _apiKey = 'YOUR_API_KEY_HERE';
+
+  static Future<NewsResponse> searchNews(String query) async {
+    final uri = Uri.https(_baseUrl, '/v2/everything', {
+      'q': query,
+      'apiKey': _apiKey,
+    });
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      return NewsResponse.fromJson(json);
+    } else {
+      throw Exception('Failed to load news');
+    }
+  }
+}
