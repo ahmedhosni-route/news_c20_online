@@ -4,6 +4,7 @@ import 'package:news_c20_online/core/theme/app_colors.dart';
 import 'package:news_c20_online/modules/layout/view/cubit/cubit.dart';
 import '../../../../core/di/di.dart';
 import '../cubit/states.dart';
+import '../screens/search_screen.dart';
 import 'articles_screen.dart';
 import 'category_screen.dart';
 
@@ -29,7 +30,17 @@ class LayoutScreen extends StatelessWidget {
               foregroundColor: AppColors.white,
               centerTitle: true,
               title: Text(cubit.selectedCategory?.name ?? "Home"),
-              actions: [Icon(Icons.search)],
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: NewsSearchDelegate(),
+                    );
+                  },
+                ),
+              ],
             ),
             drawer: Drawer(
               backgroundColor: AppColors.black,
@@ -72,7 +83,6 @@ class LayoutScreen extends StatelessWidget {
                 ],
               ),
             ),
-
             body: cubit.selectedCategory != null
                 ? ArticlesScreen()
                 : CategoryScreen(),
